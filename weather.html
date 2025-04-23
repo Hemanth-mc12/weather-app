@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Weather App</title>
+        <link rel="stylesheet" href="weather.css" />
+    </head>
+    <body>
+        <div class="card">
+            <div class="search">
+                <input type="text" placeholder="enter city name" spellcheck="false" />
+                <button><img src="https://static.vecteezy.com/system/resources/previews/007/528/225/non_2x/search-icon-search-icon-design-illustration-search-icon-simple-sign-free-vector.jpg" /></button>
+            </div>
+            <div class="error">
+                <p>Invalid city name</p>
+            </div>
+            <div class="weather">
+                <img src="https://img.freepik.com/premium-photo/3d-cloudy-sun-rain-icon-know-weather-application-web_494516-2102.jpg" class="weather-icon" />
+                <h1 class="temp">22°C</h1>
+                <h2 class="city">New York</h2>
+                <div class="details">
+                    <div class="col">
+                        <img src="https://cdn-icons-png.flaticon.com/128/13944/13944027.png" />
+                        <div>
+                            <p class="humidity">50%</p>
+                            <p>Humidity</p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <img src="https://static.vecteezy.com/system/resources/previews/025/770/653/original/wind-icon-symbol-sign-weather-windy-in-line-style-vector.jpg" />
+                        <div>
+                            <p class="wind">15km/h</p>
+                            <p>wind speed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            const apikey = "73e539c40f69d2925203d099aa423c4a";
+            const apiurl = `https://api.openweathermap.org/data/2.5/weather?q=`;
+
+            const searchBox = document.querySelector(".search input");
+            const searchBtn = document.querySelector(".search button");
+            const weatherIcon =document.querySelector(".weather-icon");
+
+            async function checkWeather(city) {
+                const response = await fetch(`${apiurl}${city}&appid=${apikey}`);
+                if(response.status==404){
+                    document.querySelector(".error").style.display="block";  
+                    document.querySelector(".weather").style.display="none";      
+                }
+                else{
+
+                
+                
+                
+                var data = await response.json();
+                }
+
+                document.querySelector(".city").innerHTML = data.name;
+                document.querySelector(".temp").innerHTML = Math.ceil(data.main.temp - 273.15) + "°C";
+                document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+                document.querySelector(".wind").innerHTML = data.wind.speed + "km/h";
+
+                if(data.weather[0].main=="Clouds"){
+                    weatherIcon.src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZtDk58SShx-qzpFmCNaOAvybcRn6RHq5JtQ&s";
+                }
+                else if(data.weather[0].main=="Clear"){
+                    weatherIcon.src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-eWnLU9qquaaO0bl6YaWPXZOocbeUo8GmMg&s"
+                }
+                else if(data.weather[0].main=="Rain"){
+                    weatherIcon.src="https://cdn-icons-png.flaticon.com/128/1163/1163657.png";
+                }
+                else if(data.weather[0].main=="Drizzle"){
+                    weatherIcon.src="data:image/png;base64,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";
+                }
+                else if(data.weater[0].main=="Mist"){
+                    weatherIcon.src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_HCZdXrvd3bSwJxqnG9ULTZQ6ZDVRXh9NKg&s";
+                }
+                document.querySelector(".weather").style.display="block";
+                document.querySelector(".error").style.display="none";    
+            }  
+                
+            
+
+            searchBtn.addEventListener("click", () => {
+                checkWeather(searchBox.value);
+            });
+        </script>
+    </body>
+</html>
